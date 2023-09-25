@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const postsRoute = require("./routes/posts");
+require("dotenv");
 
 const PORT = 5050;
 
@@ -9,13 +10,10 @@ const app = express();
 app.use("/", postsRoute);
 //le altre routes andranno qui sotto
 
-mongoose.connect(
-	"mongodb+srv://gsottovia86:7iblDzJg9Del9o0q@epicluster0.hvgd6pb.mongodb.net/",
-	{
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	}
-);
+mongoose.connect(process.env.MONGODB_URL, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+});
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, `Error during db conn-`));
