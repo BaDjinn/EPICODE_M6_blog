@@ -2,7 +2,7 @@ const express = require("express");
 const posts = express.Router();
 
 posts.get(`/posts`, (req, res) => {
-	res.send({
+	res.status(200).send({
 		author: "Giulio Sottovia",
 		job: "Engineer",
 	});
