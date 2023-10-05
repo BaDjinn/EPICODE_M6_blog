@@ -1,13 +1,21 @@
 const express = require("express");
 const PostModel = require("../models/post");
 const posts = express.Router();
+const validatePost = require("../middleware/validatePost");
 
-posts.get(`/posts`, async (req, res) => {
+posts.get(`/posts`, validatePost, async (req, res) => {
+	const { page = 1, pageSize = 3 } = req.query;
 	try {
-		const posts = await PostModel.find();
+		const posts = await PostModel.find()
+			.limit(pageSize)
+			.skip((page - 1) * pageSize);
+
+		const totalPost = await PostModel.count();
 
 		res.status(200).send({
 			statusCode: 200,
+			currentPage: Number(page),
+			totalPages: Math.cell(totalPosts / pagesize),
 			posts,
 		});
 	} catch (error) {
@@ -38,7 +46,7 @@ posts.post("/posts/create", async (req, res) => {
 	}
 });
 
-posts.patch("/posts/update", async (req, res) => {
+posts.patch("/posts/update/:postId", async (req, res) => {
 	const { postId } = req.params;
 	const postExist = await PostModel.findById(postId);
 
@@ -71,6 +79,28 @@ posts.patch("/posts/update", async (req, res) => {
 	}
 });
 
-/* posts.delete("/posts/delete", async (req, res) => {}); */
+posts.delete("/posts/delete/:postId", async (req, res) => {
+	const { postId } = req.params;
+	const postExist = await Post.Model.findById(postId);
+
+	if (!postExist) {
+		return res
+			.status(404)
+			.send({ statusCode: 404, message: "Il post non esiste" });
+	}
+
+	try {
+		const result = await PostModel.findByIdAndDelete(postId);
+		res.status(200).send({
+			statusCode: 200,
+			message: `Post ${postId} cancellato`,
+		});
+	} catch (error) {
+		res.status(500).send({
+			statusCode: 500,
+			message: "Errore interno del server",
+		});
+	}
+});
 
 module.exports = posts;

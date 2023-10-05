@@ -2,3 +2,25 @@ GET http://localhost:5050/posts
 
 ####
 
+POST http://localhost:5050/user/create HTTP/1.1
+Content-Type: application/json
+
+{
+    "firstName":"Gigi",
+    "lastName":"DeGigis",
+    "email":"gigidegigis@gmail.com",
+    "password":"superGigi!"
+
+}
+
+####
+POST http://localhost:5050/user/create HTTP/1.1
+Content-Type: application/json
+
+{
+    "firstName":"Gigi",
+    "lastName":"DeGigis",
+    "email":"gigidegigis@gmail.com",
+    "password":"superGigi!"
+
+}

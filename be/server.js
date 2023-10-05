@@ -1,15 +1,17 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const postsRoute = require("./routes/posts");
-require("dotenv");
-
-const PORT = 5050;
+const logger = require("../be/middleware/logger");
+const routesUser = require("./routes/routesUser");
 
 const app = express();
 
+app.use(logger);
+app.use(express.json);
 app.use("/", postsRoute);
 //le altre routes andranno qui sotto
-
+app.use("/", routesUser);
 mongoose.connect(process.env.MONGODB_URL, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
@@ -21,6 +23,6 @@ db.once("open", () => {
 	console.log(`Database suxex connected`);
 });
 
-app.listen(PORT, () => {
-	console.log(`Server up and running on port ${PORT}`);
+app.listen(process.env.PORT, () => {
+	console.log(`Server up and running on port ${process.env.PORT}`);
 });
